@@ -1,12 +1,17 @@
-print("hello world")
-print("wassup")
+
 import random
 import json
 
 
 # Crop Class
-class Crop:
-    def __init__(self, crop_type, days_to_harvest, sell_price):
+class Farm(): 
+    '''
+    This class will hold the main strcuture of the farm such as the size, ability to increase, ability to plant crops (using grow method in crop class), and more.  
+    '''
+    def __init__(self) -> None:
+        pass
+class Crop(Farm):
+    def __init__(self, crop_type: str, days_to_harvest, sell_price):
         """
         Initializes crop with its basic attributes.
 
@@ -52,9 +57,26 @@ class Crop:
         Returns True if crop is ready to harvest.
         """
         return self.days_grown >= self.days_to_harvest and self.health > 0
+    
+    def inventory(self):
+       '''
+       This stores all the crop objects the player has.
+       '''
+       pass
 
     def __str__(self):
         """
         String representation for printing crop status.
         """
         return f"{self.crop_type}: {self.days_grown}/{self.days_to_harvest} days, Health: {self.health}"
+    
+
+class Player():
+    def __init__(self, name, money):
+        self.name= name
+        self.energy = 50
+        self.money = 1000
+    def __str__(self):
+        return f"{self.name} has {self.energy} energy left and {self.money} amount of money left."
+    
+    
