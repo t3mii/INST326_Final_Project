@@ -85,7 +85,14 @@ class Player(): #Temi
         """"
         self.money += amount
         return self.money 
-    
+        
+    def display_stats(self):
+        """
+        Print current stats of player
+        """
+        print(f"Name: {self.name}")
+        print(f"Money: ${self.money}")
+        print(f"Energy: {self.energy}")
     
 # Mamadou Niang
 
