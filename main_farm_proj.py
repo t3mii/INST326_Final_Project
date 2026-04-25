@@ -4,7 +4,7 @@ import json
 
 
 # Crop Class
-class Farm(): 
+class Farm(): #Temi
     '''
     This class will hold the main strcuture of the farm such as the size, ability to increase, ability to plant crops (using grow method in crop class), and more.  
     '''
@@ -58,7 +58,7 @@ class Crop(Farm):
         """
         return self.days_grown >= self.days_to_harvest and self.health > 0
     
-    def inventory(self):
+    def inventory(self): #Temi
        '''
        This stores all the crop objects the player has.
        '''
@@ -71,7 +71,7 @@ class Crop(Farm):
         return f"{self.crop_type}: {self.days_grown}/{self.days_to_harvest} days, Health: {self.health}"
     
 
-class Player():
+class Player(): #Temi
     def __init__(self, name, money):
         self.name= name
         self.energy = 50

@@ -12,4 +12,9 @@ The game ends when the player enters "end game" to return their results since a 
 5. Game cycle ends at the end of the year and the game ends when the user enters “end game” to return their results
 
 ## Sources/Resources:
+*(None yet..)*
+## File Purposes:
+1. main_farm_project.py: this is where the game runs and it includes all classes and code for the game
+2. results.json: this file will store the player's results so it can be returned to them at the end of the game
+
 
