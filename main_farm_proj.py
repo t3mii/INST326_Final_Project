@@ -1,4 +1,4 @@
-
+import os
 import random
 import json
 
@@ -78,12 +78,16 @@ class Player(): #Temi
         self.money = 1000
     def __str__(self):
         return f"{self.name} has {self.energy} energy left and {self.money} amount of money left."
+
+    def add_money(self, amount) #Raymond Quarshie
+        """"
+        Adds money to player's balance
+        """"
+        self.money += amount
+        return self.money 
     
     
 # Mamadou Niang
-
-
-import os
 
 # Summary class - handles end of game recap
 class Summary: # Mamadou Niang
