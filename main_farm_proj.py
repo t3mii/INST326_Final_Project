@@ -10,7 +10,7 @@ class Farm(): #Temi
     '''
     def __init__(self) -> None:
         pass
-class Crop(Farm):
+class Crop(Farm): #Jacob
     def __init__(self, crop_type: str, days_to_harvest, sell_price):
         """
         Initializes crop with its basic attributes.
@@ -27,7 +27,7 @@ class Crop(Farm):
         self.health = 100            # crop health where 0 = dead
         self.watered_today = False   # if it was watered this day
 
-    def grow(self):
+    def grow(self): #Jacob
         """
         Simulates one day of growth.
 
@@ -46,13 +46,13 @@ class Crop(Farm):
 
         self.watered_today = False  # reset for next day
 
-    def apply_water(self):
+    def apply_water(self): #Jacob
         """
         Marks crop as watered for the day.
         """
         self.watered_today = True
 
-    def check_harvest_ready(self):
+    def check_harvest_ready(self): #Jacob
         """
         Returns True if crop is ready to harvest.
         """
