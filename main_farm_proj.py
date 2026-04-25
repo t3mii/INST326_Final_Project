@@ -80,3 +80,52 @@ class Player(): #Temi
         return f"{self.name} has {self.energy} energy left and {self.money} amount of money left."
     
     
+# Mamadou Niang
+
+
+import os
+
+# Summary class - handles end of game recap
+class Summary: # Mamadou Niang
+    
+    def __init__(self, playerName, finalMoney, crops_harvested, days):
+        self.playerName = playerName  
+        self.finalMoney = finalMoney
+        self.crops_harvested = crops_harvested  # list of what was harvested
+        self.days = days  # how many days they played
+    
+    def save_summary(self, filename="farm_summary.json"):
+        # builds the summary dict to dump into json
+        summary_data = {
+            "player": self.playerName,
+            "money": self.finalMoney,
+            "days_played": self.days,
+            "crops": self.crops_harvested  # whatever they harvested
+        }
+        
+        with open(filename, "w") as f:
+            json.dump(summary_data, f, indent=4)  # indent makes it readable i think
+        
+        print(f"Summary saved to {filename}!")  # just so player knows it worked
+
+    def load_and_print(self, filename="farm_summary.json"):
+        # loads the file back and prints it out, kinda like a receipt
+        if not os.path.exists(filename):
+            print("no summary file found, did you save first?")
+            return
+        
+        with open(filename, "r") as f:
+            data = json.load(f)  # TODO: maybe add error handling later
+        
+        # f-string to print out the final results
+        print(f"\n===== GAME OVER =====")
+        print(f"Player: {data['player']}")
+        print(f"Days survived: {data['days_played']}")
+        print(f"Final money: ${data['money']}")
+        print(f"Crops harvested: {', '.join(data['crops']) if data['crops'] else 'none lol'}")
+        print(f"=====================\n")
+    
+    def __str__(self):
+        # magic method so you can just print the object if needed
+        return f"{self.playerName} finished with ${self.finalMoney} after {self.days} days"
+
