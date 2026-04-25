@@ -9,6 +9,9 @@ class Farm(): #Temi
     This class will hold the main strcuture of the farm such as the size, ability to increase, ability to plant crops (using grow method in crop class), and more.  
     '''
     def __init__(self) -> None:
+        '''
+        Initialize the variables of the Farm class
+        '''
         pass
 class Crop(Farm): #Jacob
     def __init__(self, crop_type: str, days_to_harvest, sell_price):
@@ -72,17 +75,23 @@ class Crop(Farm): #Jacob
     
 
 class Player(): #Temi
-    def __init__(self, name, money):
+    def __init__(self, name):
+        '''
+        Initialize the attributes for the Player class
+        '''
         self.name= name
         self.energy = 50
         self.money = 1000
     def __str__(self):
+        '''
+        Print a summary of the player's stats.
+        '''
         return f"{self.name} has {self.energy} energy left and {self.money} amount of money left."
 
-    def add_money(self, amount) #Raymond Quarshie
-        """"
+    def add_money(self, amount): #Raymond Quarshie
+        '''
         Adds money to player's balance
-        """"
+        '''
         self.money += amount
         return self.money 
         
@@ -105,7 +114,7 @@ class Summary: # Mamadou Niang
         self.crops_harvested = crops_harvested  # list of what was harvested
         self.days = days  # how many days they played
     
-    def save_summary(self, filename="farm_summary.json"):
+    def save_summary(self, filename="results.json"):
         # builds the summary dict to dump into json
         summary_data = {
             "player": self.playerName,
@@ -119,7 +128,7 @@ class Summary: # Mamadou Niang
         
         print(f"Summary saved to {filename}!")  # just so player knows it worked
 
-    def load_and_print(self, filename="farm_summary.json"):
+    def load_and_print(self, filename="results.json"):
         # loads the file back and prints it out, kinda like a receipt
         if not os.path.exists(filename):
             print("no summary file found, did you save first?")
