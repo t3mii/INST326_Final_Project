@@ -181,15 +181,11 @@ class Summary: # Mamadou Niang
             "money": self.finalMoney,
             "months_played": self.months,
             "crops": self.crops_harvested,
-            "crops": self.crops_harvested,
             "farm_size": self.farm_size,
             "version": self.version
         }
         with open(filename, "w") as f:
             json.dump(summary_data, f, indent=4)
-        print(f"Summary saved to {filename}!")
-            json.dump(summary_data, f, indent=4)
-        
         print(f"Summary saved to {filename}!")
 
     def load_and_print(self, filename="results.json"):
@@ -199,7 +195,7 @@ class Summary: # Mamadou Niang
             return
         with open(filename, "r") as f:
             data = json.load(f)
-            data = json.load(f)
+            
         
         print(f"\n===== GAME OVER =====")
         print(f"Player: {data['player']}")
