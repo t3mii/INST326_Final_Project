@@ -157,14 +157,7 @@ class Crop(): #Jacob
             bool: True if the crop is ready to harvest, otherwise False.
         '''
         return self.months_grown >= self.months_to_harvest and self.health > 0
-    
-    def inventory(self): #Temi
-       '''
-       Placeholder method for crop inventory management.
-       Returns:
-           None
-       '''
-       pass
+
 
     def __str__(self):
         '''
@@ -303,7 +296,15 @@ class Summary: # Mamadou Niang
 
 def main():
     '''
-    Run the main farm game loop, handling player actions and game events.
+    Run the main farm game loop: Complete farm simulator game with monthly cycles, random events, and expansion
+
+- Update Crop class to use monthly growth instead of daily
+- Implement Farm class methods for planting, harvesting, watering, growing, and expanding
+- Add random events each month affecting crop health and yields
+- Introduce farm expansion feature to increase crop capacity
+- Change game loop to 12-month cycle with early end option
+- Update Summary class to track farm size and game version in results.json
+- Integrate all classes in main function for full gameplay actions and game events.
     Returns:
         None
     '''
