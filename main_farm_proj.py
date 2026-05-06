@@ -73,7 +73,7 @@ class Farm(): #Temi
 class Crop(): #Jacob
     def __init__(self, crop_type: str, months_to_harvest, sell_price):
         """
-        This class initializes crop with its basic attributes.
+        Initializes crop with its basic attributes.
 
         crop_type: name of the crop (string)
         months_to_harvest: amount of months it takes to grow
@@ -319,7 +319,7 @@ def main():
             else:
                 print("Not enough money to expand!")
 
-        elif choice == "5":  #Refill Water
+        elif choice == "5":  # Refill water - Raymond Quarshie
             if player.money >= 10:
                 player.money -= 10
                 farm.water = min(200, farm.water + 50)
