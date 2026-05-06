@@ -153,15 +153,15 @@ class Player(): #Temi
         self.money += amount
         return self.money 
         
-    def display_stats(self):
+    def display_stats(self, farm):  # FIXED: farm parameter added
         """
         Print current stats of player
         """
         print(f"Name: {self.name}")
         print(f"Money: ${self.money}")
         print(f"Energy: {self.energy}")
-        print(f"Water: {self.water}" if hasattr(self, 'water') else "Water: Check Farm")
-    
+        print(f"Water: {farm.water}")  # FIXED: uses farm.water
+
 
 class Summary: # Mamadou Niang
     
@@ -179,26 +179,25 @@ class Summary: # Mamadou Niang
             "player": self.playerName,
             "money": self.finalMoney,
             "months_played": self.months,
-            "crops": self.crops_harvested,  # whatever they harvested
+            "crops": self.crops_harvested,
             "farm_size": self.farm_size,
             "version": self.version
         }
         
         with open(filename, "w") as f:
-            json.dump(summary_data, f, indent=4)  # indent makes it readable i think
+            json.dump(summary_data, f, indent=4)
         
-        print(f"Summary saved to {filename}!")  # just so player knows it worked
+        print(f"Summary saved to {filename}!")
 
     def load_and_print(self, filename="results.json"):
-        # loads the file back and prints it out, kinda like a receipt
+        # loads the file back and prints it out
         if not os.path.exists(filename):
             print("no summary file found, did you save first?")
             return
         
         with open(filename, "r") as f:
-            data = json.load(f)  # TODO: maybe add error handling later
+            data = json.load(f)
         
-        # f-string to print out the final results
         print(f"\n===== GAME OVER =====")
         print(f"Player: {data['player']}")
         print(f"Months survived: {data['months_played']}")
@@ -209,7 +208,6 @@ class Summary: # Mamadou Niang
         print(f"=====================\n")
     
     def __str__(self):
-        # magic method so you can just print the object if needed
         return f"{self.playerName} finished with ${self.finalMoney} after {self.months} months, farm size {self.farm_size}"
 
 
@@ -225,7 +223,7 @@ def main():
         "tomato": {"months": 1, "price": 15, "cost": 7}
     }
     
-    farm = Farm(0, 100, 0, [], 1)  # money and energy managed by player
+    farm = Farm(0, 100, 0, [], 1)
     month = 1
     harvested_crops = []
     
@@ -252,9 +250,8 @@ def main():
             for crop in farm.crop_list:
                 crop.health -= 15
         
-        player.display_stats()
+        player.display_stats(farm)  # FIXED: passing farm parameter
         print(f"Farm: {farm}")
-        print(f"Water: {farm.water}")  # Display farm water
         print("Your crops:")
         for i, crop in enumerate(farm.crop_list):
             print(f"{i+1}. {crop}")
@@ -288,10 +285,10 @@ def main():
             else:
                 print("Invalid crop!")
         
-        elif choice == "2":  # Raymond Quarshie
+        elif choice == "2":
             energy_cost = 10
             if player.energy >= energy_cost:
-                if farm.water_crops():  # This now returns True/False
+                if farm.water_crops():
                     player.energy -= energy_cost
                     print("All crops watered! Water remaining:", farm.water)
                 else:
@@ -319,7 +316,7 @@ def main():
             else:
                 print("Not enough money to expand!")
 
-        elif choice == "5":  # Refill water - Raymond Quarshie
+        elif choice == "5": #water refile
             if player.money >= 10:
                 player.money -= 10
                 farm.water = min(200, farm.water + 50)
@@ -327,7 +324,7 @@ def main():
             else:
                 print("Not enough money! Need $10")
                 
-        elif choice == "6":  # End game early
+        elif choice == "6":
             print("Ending game early...")
             break
         
@@ -338,7 +335,7 @@ def main():
         farm.grow_crops()
         month += 1
         farm.day = month
-        player.energy = min(50, player.energy + 15)  # regain energy
+        player.energy = min(50, player.energy + 15)
         
         if player.money <= 0:
             print("Game over! Out of money.")
