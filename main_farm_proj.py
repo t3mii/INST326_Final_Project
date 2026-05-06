@@ -6,28 +6,11 @@ import json
 # Crop Class
 class Farm(): #Temi
     '''
-    Farm holds the current state of the farm and provides actions for planting,
-    watering, growing, and harvesting crops.
-    Args:
-        money (int): Starting money available to the farm.
-        water (int): Current water supply for crop care.
-        energy (int): Energy available for farm operations.
-        crop_list (list[Crop]): List of planted crops on the farm.
-        day (int): Current day or month count in the game.
-    Returns:
-        None
+    This class will hold the main strcuture of the farm such as the size, ability to increase, ability to plant crops (using grow method in crop class), and more.  
     '''
     def __init__(self, money, water, energy, crop_list, day) -> None:
         '''
-        Initialize the Farm instance.
-        Args:
-            money (int): Starting money available to the farm.
-            water (int): Initial water supply.
-            energy (int): Initial energy level.
-            crop_list (list[Crop]): Initial list of crops.
-            day (int): Starting day or month count.
-        Returns:
-            None
+        Initialize the variables of the Farm class
         '''
         self.money = money
         self.water = water
@@ -37,24 +20,18 @@ class Farm(): #Temi
         self.size = 10  # maximum number of crops
     
     def plant_crop(self, crop):
-        '''
-        Plant a crop if there is room on the farm.
-        Args:
-            crop (Crop): Crop instance to plant.
-        Returns:
-            bool: True if the crop was planted, False if the farm is full.
-        '''
+        """
+        Plant a crop if there's space.
+        """
         if len(self.crop_list) < self.size:
             self.crop_list.append(crop)
             return True
         return False
     
     def harvest_ready_crops(self):
-        '''
-        Harvest all crops that are ready to harvest.
-        Returns:
-            list[Crop]: List of harvested crop instances.
-        '''
+        """
+        Harvest all ready crops and return them.
+        """
         harvested = []
         for crop in self.crop_list[:]:
             if crop.check_harvest_ready():
@@ -62,61 +39,46 @@ class Farm(): #Temi
                 self.crop_list.remove(crop)
         return harvested
     
-    def water_crops(self):
-        '''
-        Water all planted crops.
-        Returns:
-            None
-        '''
-        for crop in self.crop_list:
-            crop.apply_water()
+    def water_crops(self): #Raymond Quarshie
+        """
+        Water all crops.
+        """
+        if self.water >= 10:  # Check if enough water
+            self.water -= 10   # Consume water
+            for crop in self.crop_list:
+                crop.apply_water()
+            return True
+        return False  # Not enough water
     
     def grow_crops(self):
-        '''
-        Advance growth for all crops by one month.
-        Returns:
-            None
-        '''
+        """
+        Grow all crops by one day.
+        """
         for crop in self.crop_list:
             crop.grow()
     
     def increase_size(self, amount):
-        '''
-        Increase the farm's maximum crop capacity.
-        Args:
-            amount (int): Number of additional crop slots.
-        Returns:
-            None
-        '''
+        """
+        Increase the farm size.
+        """
         self.size += amount
     
     def __str__(self):
-        '''
-        Return a human-readable summary of the farm.
-        Returns:
-            str: Farm summary string.
-        '''
+        """
+        String representation of the farm.
+        """
         return f"Farm: Size {self.size}, Crops: {len(self.crop_list)}, Month: {self.day}"
+
+
 class Crop(): #Jacob
-    '''
-    Crop represents a planted crop with growth, health, and harvest state.
-    Args:
-        crop_type (str): Type of crop, such as wheat or corn.
-        months_to_harvest (int): Months required before the crop can be harvested.
-        sell_price (int): Money gained when the crop is harvested.
-    Returns:
-        None
-    '''
     def __init__(self, crop_type: str, months_to_harvest, sell_price):
-        '''
-        Initialize a Crop instance.
-        Args:
-            crop_type (str): The crop's name or type.
-            months_to_harvest (int): Number of months needed to mature.
-            sell_price (int): Base selling price when harvested.
-        Returns:
-            None
-        '''
+        """
+        Initializes crop with its basic attributes.
+
+        crop_type: name of the crop (string)
+        months_to_harvest: amount of months it takes to grow
+        sell_price: base price
+        """
         self.crop_type = crop_type
         self.months_to_harvest = months_to_harvest
         self.sell_price = sell_price
@@ -126,11 +88,13 @@ class Crop(): #Jacob
         self.watered_this_month = False   # if it was watered this month
 
     def grow(self): #Jacob
-        '''
-        Apply monthly growth effects to the crop.
-        Returns:
-            None
-        '''
+        """
+        Simulates one month of growth.
+
+        - If watered: crop grows and gains health
+        - If not watered: crop loses health
+        - Resets watered status after growth
+        """
         if self.health <= 0:
             return  # dead crops = nothing
 
@@ -143,94 +107,63 @@ class Crop(): #Jacob
         self.watered_this_month = False  # reset for next month
 
     def apply_water(self): #Jacob
-        '''
-        Mark the crop as watered for the current month.
-        Returns:
-            None
-        '''
+        """
+        Marks crop as watered for the month.
+        """
         self.watered_this_month = True
 
     def check_harvest_ready(self): #Jacob
-        '''
-        Check whether the crop has grown enough and is still healthy.
-        Returns:
-            bool: True if the crop is ready to harvest, otherwise False.
-        '''
+        """
+        Returns True if crop is ready to harvest.
+        """
         return self.months_grown >= self.months_to_harvest and self.health > 0
-
+    
+    def inventory(self): #Temi
+       '''
+       This stores all the crop objects the player has.
+       '''
+       pass
 
     def __str__(self):
-        '''
-        Return a string describing the crop's growth and health.
-        Returns:
-            str: Crop status string.
-        '''
+        """
+        String representation for printing crop status.
+        """
         return f"{self.crop_type}: {self.months_grown}/{self.months_to_harvest} months, Health: {self.health}"
     
 
 class Player(): #Temi
-    '''
-    Player stores the current player name, energy, and money balance.
-    Args:
-        name (str): Name of the player.
-    Returns:
-        None
-    '''
     def __init__(self, name):
         '''
-        Initialize a Player instance.
-        Args:
-            name (str): The player's name.
-        Returns:
-            None
+        Initialize the attributes for the Player class
         '''
-        self.name= name
+        self.name = name
         self.energy = 50
         self.money = 1000
+        
     def __str__(self):
         '''
-        Return a summary of the player's current stats.
-        Returns:
-            str: Player stats summary.
+        Print a summary of the player's stats.
         '''
         return f"{self.name} has {self.energy} energy left and {self.money} amount of money left."
 
     def add_money(self, amount): #Raymond Quarshie
         '''
-        Add money to the player's balance.
-        Args:
-            amount (int): Amount to add to the player's money.
-        Returns:
-            int: Updated money balance.
+        Adds money to player's balance
         '''
         self.money += amount
         return self.money 
         
     def display_stats(self):
-        '''
-        Print the player's current money and energy.
-        Returns:
-            None
-        '''
+        """
+        Print current stats of player
+        """
         print(f"Name: {self.name}")
         print(f"Money: ${self.money}")
         print(f"Energy: {self.energy}")
+        print(f"Water: {self.water}" if hasattr(self, 'water') else "Water: Check Farm")
     
-# Mamadou Niang
 
 class Summary: # Mamadou Niang
-    '''
-    Summary captures end-of-game results and can save or print them.
-    Args:
-        playerName (str): Name of the player.
-        finalMoney (int): Final money balance at game end.
-        crops_harvested (list[str]): Names of harvested crops.
-        months (int): Number of months played.
-        farm_size (int): Final farm capacity.
-        version (str): Summary format version.
-    Returns:
-        None
-    '''
     
     def __init__(self, playerName, finalMoney, crops_harvested, months, farm_size, version="1.0"):
         self.playerName = playerName  
@@ -241,13 +174,7 @@ class Summary: # Mamadou Niang
         self.version = version
     
     def save_summary(self, filename="results.json"):
-        '''
-        Save the summary data to a JSON file.
-        Args:
-            filename (str): Name of the file to save the summary.
-        Returns:
-            None
-        '''
+        # builds the summary dict to dump into json
         summary_data = {
             "player": self.playerName,
             "money": self.finalMoney,
@@ -263,13 +190,7 @@ class Summary: # Mamadou Niang
         print(f"Summary saved to {filename}!")  # just so player knows it worked
 
     def load_and_print(self, filename="results.json"):
-        '''
-        Load summary data from a file and print it.
-        Args:
-            filename (str): Name of the file to load the summary from.
-        Returns:
-            None
-        '''
+        # loads the file back and prints it out, kinda like a receipt
         if not os.path.exists(filename):
             print("no summary file found, did you save first?")
             return
@@ -277,6 +198,7 @@ class Summary: # Mamadou Niang
         with open(filename, "r") as f:
             data = json.load(f)  # TODO: maybe add error handling later
         
+        # f-string to print out the final results
         print(f"\n===== GAME OVER =====")
         print(f"Player: {data['player']}")
         print(f"Months survived: {data['months_played']}")
@@ -287,27 +209,11 @@ class Summary: # Mamadou Niang
         print(f"=====================\n")
     
     def __str__(self):
-        '''
-        Return a concise summary of the final game results.
-        Returns:
-            str: Summary string.
-        '''
+        # magic method so you can just print the object if needed
         return f"{self.playerName} finished with ${self.finalMoney} after {self.months} months, farm size {self.farm_size}"
 
-def main():
-    '''
-    Run the main farm game loop: Complete farm simulator game with monthly cycles, random events, and expansion
 
-- Update Crop class to use monthly growth instead of daily
-- Implement Farm class methods for planting, harvesting, watering, growing, and expanding
-- Add random events each month affecting crop health and yields
-- Introduce farm expansion feature to increase crop capacity
-- Change game loop to 12-month cycle with early end option
-- Update Summary class to track farm size and game version in results.json
-- Integrate all classes in main function for full gameplay actions and game events.
-    Returns:
-        None
-    '''
+def main():
     name = input("Please enter your name: ")
     player = Player(name)
     print("Welcome to the Farm Game!")
@@ -348,6 +254,7 @@ def main():
         
         player.display_stats()
         print(f"Farm: {farm}")
+        print(f"Water: {farm.water}")  # Display farm water
         print("Your crops:")
         for i, crop in enumerate(farm.crop_list):
             print(f"{i+1}. {crop}")
@@ -357,7 +264,8 @@ def main():
         print("2. Water crops")
         print("3. Harvest ready crops")
         print("4. Expand farm")
-        print("5. End game early")
+        print("5. Refill water ($10)")
+        print("6. End game early")
         
         choice = input("Enter your choice: ").strip()
         
@@ -380,12 +288,14 @@ def main():
             else:
                 print("Invalid crop!")
         
-        elif choice == "2":
+        elif choice == "2":  # Raymond Quarshie
             energy_cost = 10
             if player.energy >= energy_cost:
-                player.energy -= energy_cost
-                farm.water_crops()
-                print("All crops watered!")
+                if farm.water_crops():  # This now returns True/False
+                    player.energy -= energy_cost
+                    print("All crops watered! Water remaining:", farm.water)
+                else:
+                    print("Not enough water! (Need 10 water)")
             else:
                 print("Not enough energy!")
         
@@ -408,8 +318,16 @@ def main():
                 print("Farm expanded! Size increased by 5.")
             else:
                 print("Not enough money to expand!")
-        
-        elif choice == "5":
+
+        elif choice == "5":  #Refill Water
+            if player.money >= 10:
+                player.money -= 10
+                farm.water = min(200, farm.water + 50)
+                print(f"Water refilled! Now at {farm.water}")
+            else:
+                print("Not enough money! Need $10")
+                
+        elif choice == "6":  # End game early
             print("Ending game early...")
             break
         
@@ -430,6 +348,7 @@ def main():
     summary = Summary(player.name, player.money, harvested_crops, month - 1, farm.size)
     summary.save_summary()
     summary.load_and_print()
+
 
 if __name__ == "__main__":
     main()
