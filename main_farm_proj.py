@@ -293,7 +293,26 @@ class Summary: # Mamadou Niang
             str: Summary string.
         '''
         return f"{self.playerName} finished with ${self.finalMoney} after {self.months} months, farm size {self.farm_size}"
+    def rank_crops_by_value(self, crop_prices: dict) -> list:
+        """
+        Ranks harvested crops by total earned value using a scoring algorithm.
+        score = (frequency * base_price) + consistency_bonus
+        Consistency bonus rewards crops harvested more than twice.
+        Uses technique #9: sorted() with a key function (lambda).
+        """
+        crop_counts = {}
+        for crop in self.crops_harvested:
+            crop_counts[crop] = crop_counts.get(crop, 0) + 1
 
+        scored = []
+        for crop_type, count in crop_counts.items():
+            base_price = crop_prices.get(crop_type, 0)
+            consistency_bonus = (count - 2) * (base_price * 0.15) if count > 2 else 0
+            score = (count * base_price) + consistency_bonus
+            scored.append((crop_type, round(score, 2)))
+
+        return sorted(scored, key=lambda item: item[1], reverse=True)   
+    
 def main():
     '''
     Run the main farm game loop: Complete farm simulator game with monthly cycles, random events, and expansion
