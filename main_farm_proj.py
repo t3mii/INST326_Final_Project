@@ -73,7 +73,7 @@ class Farm(): #Temi
 class Crop(): #Jacob
     def __init__(self, crop_type: str, months_to_harvest, sell_price):
         """
-        Initializes crop with its basic attributes.
+        This class initializes crop with its basic attributes.
 
         crop_type: name of the crop (string)
         months_to_harvest: amount of months it takes to grow
