@@ -73,7 +73,7 @@ class Farm(): #Temi
 class Crop(): #Jacob
     def __init__(self, crop_type: str, months_to_harvest, sell_price):
         """
-        This class initializes crop with its basic attributes.
+        Initializes crop with its basic attributes.
 
         crop_type: name of the crop (string)
         months_to_harvest: amount of months it takes to grow
@@ -162,6 +162,7 @@ class Player(): #Temi
         print(f"Energy: {self.energy}")
         print(f"Water: {self.water}" if hasattr(self, 'water') else "Water: Check Farm")
     
+# Mamadou Niang
 
 class Summary: # Mamadou Niang
     
@@ -174,31 +175,24 @@ class Summary: # Mamadou Niang
         self.version = version
     
     def save_summary(self, filename="results.json"):
-        # builds the summary dict to dump into json
         summary_data = {
             "player": self.playerName,
             "money": self.finalMoney,
             "months_played": self.months,
-            "crops": self.crops_harvested,  # whatever they harvested
+            "crops": self.crops_harvested,
             "farm_size": self.farm_size,
             "version": self.version
         }
-        
         with open(filename, "w") as f:
-            json.dump(summary_data, f, indent=4)  # indent makes it readable i think
-        
-        print(f"Summary saved to {filename}!")  # just so player knows it worked
+            json.dump(summary_data, f, indent=4)
+        print(f"Summary saved to {filename}!")
 
     def load_and_print(self, filename="results.json"):
-        # loads the file back and prints it out, kinda like a receipt
         if not os.path.exists(filename):
             print("no summary file found, did you save first?")
             return
-        
         with open(filename, "r") as f:
-            data = json.load(f)  # TODO: maybe add error handling later
-        
-        # f-string to print out the final results
+            data = json.load(f)
         print(f"\n===== GAME OVER =====")
         print(f"Player: {data['player']}")
         print(f"Months survived: {data['months_played']}")
@@ -209,145 +203,27 @@ class Summary: # Mamadou Niang
         print(f"=====================\n")
     
     def __str__(self):
-        # magic method so you can just print the object if needed
         return f"{self.playerName} finished with ${self.finalMoney} after {self.months} months, farm size {self.farm_size}"
 
-def main():
-    name = input("Please enter your name: ")
-    player = Player(name)
-    print("Welcome to the Farm Game!")
-    
-    # Define available crops
-    crops_available = {
-        "wheat": {"months": 1, "price": 10, "cost": 5},
-        "corn": {"months": 2, "price": 20, "cost": 10},
-        "tomato": {"months": 1, "price": 15, "cost": 7}
-    }
-    
-    farm = Farm(0, 100, 0, [], 1)  # money and energy managed by player
-    month = 1
-    harvested_crops = []
-    
-    while month <= 12:
-        # Random event at start of month
-        events = [
-            ("Good rain", "All crops are automatically watered this month!"),
-            ("Drought", "Crops lose extra health due to drought."),
-            ("Pests", "Pests damage crops, reducing health."),
-            ("Sunny weather", "Normal month, no special effects."),
-            ("Bountiful harvest", "Harvest yields are doubled this month!")
-        ]
-        event_name, event_desc = random.choice(events)
-        print(f"\n--- Month {month}: {event_name} ---")
-        print(event_desc)
-        
-        # Apply event effects
-        if event_name == "Good rain":
-            farm.water_crops()
-        elif event_name == "Drought":
-            for crop in farm.crop_list:
-                crop.health -= 20
-        elif event_name == "Pests":
-            for crop in farm.crop_list:
-                crop.health -= 15
-        
-        player.display_stats()
-        print(f"Farm: {farm}")
-        print(f"Water: {farm.water}")  # Display farm water
-        print("Your crops:")
-        for i, crop in enumerate(farm.crop_list):
-            print(f"{i+1}. {crop}")
-        
-        print("\nActions:")
-        print("1. Plant a crop")
-        print("2. Water crops")
-        print("3. Harvest ready crops")
-        print("4. Expand farm")
-        print("5. Refill water ($10)")
-        print("6. End game early")
-        
-        choice = input("Enter your choice: ").strip()
-        
-        if choice == "1":
-            print("Available crops:")
-            for name, info in crops_available.items():
-                print(f"{name}: Cost ${info['cost']}, Harvest in {info['months']} months, Sell for ${info['price']}")
-            crop_choice = input("Which crop to plant? ").strip().lower()
-            if crop_choice in crops_available:
-                cost = crops_available[crop_choice]["cost"]
-                if player.money >= cost:
-                    player.money -= cost
-                    new_crop = Crop(crop_choice, crops_available[crop_choice]["months"], crops_available[crop_choice]["price"])
-                    if farm.plant_crop(new_crop):
-                        print(f"Planted {crop_choice}!")
-                    else:
-                        print("Farm is full! Cannot plant more crops.")
-                else:
-                    print("Not enough money!")
-            else:
-                print("Invalid crop!")
-        
-        elif choice == "2":  # Raymond Quarshie
-            energy_cost = 10
-            if player.energy >= energy_cost:
-                if farm.water_crops():  # This now returns True/False
-                    player.energy -= energy_cost
-                    print("All crops watered! Water remaining:", farm.water)
-                else:
-                    print("Not enough water! (Need 10 water)")
-            else:
-                print("Not enough energy!")
-        
-        elif choice == "3":
-            ready_crops = farm.harvest_ready_crops()
-            multiplier = 2 if event_name == "Bountiful harvest" else 1
-            if ready_crops:
-                for crop in ready_crops:
-                    player.money += crop.sell_price * multiplier
-                    harvested_crops.append(crop.crop_type)
-                print(f"Harvested {len(ready_crops)} crops! (Multiplier: {multiplier})")
-            else:
-                print("No crops ready to harvest.")
-        
-        elif choice == "4":
-            expand_cost = 100
-            if player.money >= expand_cost:
-                player.money -= expand_cost
-                farm.increase_size(5)
-                print("Farm expanded! Size increased by 5.")
-            else:
-                print("Not enough money to expand!")
+    # Mamadou Niang - added rank_crops_by_value method
+    # ranks harvested crops by profit score using a scoring algorithm
+    # implements technique #9: sorted() with a lambda key function
+    def rank_crops_by_value(self, crop_prices: dict) -> list:
+        """
+        Ranks harvested crops by total earned value using a scoring algorithm.
+        score = (frequency * base_price) + consistency_bonus
+        Consistency bonus rewards crops harvested more than twice.
+        Uses technique #9: sorted() with a key function (lambda).
+        """
+        crop_counts = {}
+        for crop in self.crops_harvested:
+            crop_counts[crop] = crop_counts.get(crop, 0) + 1
 
-        elif choice == "5":  #Refill Water
-            if player.money >= 10:
-                player.money -= 10
-                farm.water = min(200, farm.water + 50)
-                print(f"Water refilled! Now at {farm.water}")
-            else:
-                print("Not enough money! Need $10")
-                
-        elif choice == "6":  # End game early
-            print("Ending game early...")
-            break
-        
-        else:
-            print("Invalid choice!")
-        
-        # End of month
-        farm.grow_crops()
-        month += 1
-        farm.day = month
-        player.energy = min(50, player.energy + 15)  # regain energy
-        
-        if player.money <= 0:
-            print("Game over! Out of money.")
-            break
-    
-    # Game over
-    summary = Summary(player.name, player.money, harvested_crops, month - 1, farm.size)
-    summary.save_summary()
-    summary.load_and_print()
+        scored = []
+        for crop_type, count in crop_counts.items():
+            base_price = crop_prices.get(crop_type, 0)
+            consistency_bonus = (count - 2) * (base_price * 0.15) if count > 2 else 0
+            score = (count * base_price) + consistency_bonus
+            scored.append((crop_type, round(score, 2)))
 
-
-if __name__ == "__main__":
-    main()
+        return sorted(scored, key=lambda item: item[1], reverse=True)
